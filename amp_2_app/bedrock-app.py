@@ -21,13 +21,13 @@ def clear_out():
   return cleared_tuple
 
 # List of LLM models to use for text summarization
-models = ['amazon.titan-tg1-large', 'anthropic.claude-v2']
+models = ['amazon.titan-text-premier-v1:0', 'anthropic.claude-3-haiku-20240307-v1:0']
 
 # Setting up the prompt syntax for the corresponding model
 def prompt_construction(modelId, instruction="[instruction]", prompt="[input_text]"):
-  if modelId == 'amazon.titan-tg1-large':
+  if modelId == 'amazon.titan-text-premier-v1:0':
     full_prompt = instruction + """\n<text>""" + prompt + """</text>"""
-  elif modelId == 'anthropic.claude-v2':
+  elif modelId == 'anthropic.claude-3-haiku-20240307-v1:0':
     full_prompt = """Human: """ + instruction + """\n<text>""" + prompt + """</text>
 Assistant:"""
   
@@ -35,14 +35,14 @@ Assistant:"""
 
 # Setting up the API call in the correct format for the corresponding model
 def json_format(modelId, tokens, temperature, top_p, full_prompt="[input text]"):
-  if modelId == 'amazon.titan-tg1-large':
+  if modelId == 'amazon.titan-text-premier-v1:0':
     body = json.dumps({"inputText": full_prompt, 
                    "textGenerationConfig":{
                        "maxTokenCount":tokens,
                        "stopSequences":[],
                        "temperature":temperature,
                        "topP":top_p}})
-  elif modelId == 'anthropic.claude-v2':
+  elif modelId == 'anthropic.claude-3-haiku-20240307-v1:0':
     body = json.dumps({"prompt": full_prompt,
                  "max_tokens_to_sample":tokens,
                  "temperature":temperature,
@@ -54,14 +54,14 @@ def json_format(modelId, tokens, temperature, top_p, full_prompt="[input text]")
   return body
 
 def display_format(modelId):
-  if modelId == 'amazon.titan-tg1-large':
+  if modelId == 'amazon.titan-text-premier-v1:0':
     body = json.dumps({"inputText": "[input_text]", 
                    "textGenerationConfig":{
                        "maxTokenCount":"[max_tokens]",
                        "stopSequences":[],
                        "temperature":"[temperature]",
                        "topP":"[top_p]"}})
-  elif modelId == 'anthropic.claude-v2':
+  elif modelId == 'anthropic.claude-3-haiku-20240307-v1:0':
     body = json.dumps({"prompt": "[input_text]",
                  "max_tokens_to_sample":"[max_tokens]",
                  "temperature":"[temperature]",
@@ -84,9 +84,9 @@ def summarize(modelId, input_text, instruction_text, max_tokens, temperature, to
   response_body = json.loads(response.get('body').read())
 
   # Extract the output from the API response for the corresponding model
-  if modelId == 'amazon.titan-tg1-large':
+  if modelId == 'amazon.titan-text-premier-v1:0':
     result = response_body.get('results')[0].get('outputText')
-  elif modelId == 'anthropic.claude-v2':
+  elif modelId == 'anthropic.claude-3-haiku-20240307-v1:0':
     result = response_body.get('completion')
 
   return result.strip('\n')
@@ -96,7 +96,7 @@ with gr.Blocks() as demo:
     gr.Markdown("# Amazon Bedrock Text Summarization")
     example_holder = gr.Textbox(visible=False, label="Input Text", value="example")
   with gr.Row():
-    modelId = gr.Dropdown(label="Choose a Bedrock Model:", choices=models, value='amazon.titan-tg1-large')
+    modelId = gr.Dropdown(label="Choose a Bedrock Model:", choices=models, value='amazon.titan-text-premier-v1:0')
   with gr.Row():
     with gr.Column(scale=4):
       custom_instruction = gr.Textbox(label="Input your prompt instruction:", value=example_instruction)
@@ -108,8 +108,8 @@ with gr.Blocks() as demo:
         temperature = gr.Slider(minimum=0.01, maximum=1.0, step=0.01, value=0.5, label="Temperature")
         top_p = gr.Slider(minimum=0, maximum=1.0, step=0.01, value=1.0, label="Top P")
       with gr.Accordion("Bedrock API Request Details", open=False):
-        instruction_prompt = gr.Code(label="Instruction Prompt", value=prompt_construction('amazon.titan-tg1-large'))
-        input_format = gr.JSON(label="Input Format", value=display_format('amazon.titan-tg1-large'))
+        instruction_prompt = gr.Code(label="Instruction Prompt", value=prompt_construction('amazon.titan-text-premier-v1:0'))
+        input_format = gr.JSON(label="Input Format", value=display_format('amazon.titan-text-premier-v1:0'))
         with gr.Accordion("AWS Credentials", open=False):
           label = gr.Markdown("These can be set from the project env vars")
           region = gr.Markdown("**Region**: "+os.getenv('AWS_DEFAULT_REGION'))
