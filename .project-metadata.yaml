@@ -16,7 +16,7 @@ environment_variables:
     description: >-
       AWS Secret Key
   AWS_DEFAULT_REGION:
-    default: "us-west-2"
+    default: "us-east-1"
     description: >-
       AWS region
 
