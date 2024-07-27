@@ -43,14 +43,22 @@ def json_format(modelId, tokens, temperature, top_p, full_prompt="[input text]")
                        "temperature":temperature,
                        "topP":top_p}})
   elif modelId == 'anthropic.claude-3-haiku-20240307-v1:0':
-    body = json.dumps({"prompt": full_prompt,
-                 "max_tokens_to_sample":tokens,
+    body = json.dumps({
+                 "anthropic_version": "bedrock-2023-05-31",
+                 "role": "user",
+                 "messages": [ {
+                   "role": "user",
+                   "content": [{
+                     "type": "text",
+                     "text": full_prompt
+                   }]
+                 }],
+                 "max_tokens":tokens,
                  "temperature":temperature,
                  "top_k":250,
                  "top_p":top_p,
                  "stop_sequences":[]
-                  })
-    
+                  })    
   return body
 
 def display_format(modelId):
