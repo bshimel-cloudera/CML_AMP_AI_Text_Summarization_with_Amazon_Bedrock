@@ -59,13 +59,6 @@ def json_format(modelId, tokens, temperature, top_p, full_prompt="[input text]")
             "temperature": temperature,
             "top_k": 250,
             "top_p": top_p,
-            "stop_reason": "end_turn",
-            "stop_sequence": null,
-            "type": "message",
-                    "usage": {
-                        "input_tokens": 10,
-                        "output_tokens": 25
-                    }
             "messages": [{
                          "role": "user",
                          "content": [{
@@ -113,8 +106,8 @@ def summarize(modelId, input_text, instruction_text, max_tokens, temperature, to
     if modelId == 'amazon.titan-text-premier-v1:0':
         result = response_body.get('results')[0].get('outputText')
     elif modelId == 'anthropic.claude-3-haiku-20240307-v1:0':
-        result = response_body.get('completion')
-
+        result = response_body['content'][0]['text']
+        
     return result.strip('\n')
 
 
