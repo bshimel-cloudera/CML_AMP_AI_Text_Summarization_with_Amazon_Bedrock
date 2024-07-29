@@ -8,7 +8,7 @@ This repository demonstrates using an instruction to summarize a text using the 
 
 In this AMP we will show you how to setup your environment and use the Amazon Bedrock API and its models. There are two models that you can choose from.
 
-The models we will be highlighting are **amazon.titan-tg1-large** and **anthropic.claude-v2** (supports 100K tokens in the prompt).
+The models we will be highlighting are **amazon.titan-text-premier-v1:0** and **anthropic.claude-3-haiku-20240307-v1:0** (supports 200K tokens in the prompt).
 When calling each of these models using the API, it is important to note the format of the prompt it expects and the schema of the request API.
 
 ![Amp Screenshot](images/titan-example.png)
